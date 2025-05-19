@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Presentation Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .slide {
+            background-image: linear-gradient(to bottom right, #f3f4f6, #e5e7eb);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .slide:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .slide-content {
+            height: 80%;
+            overflow-y: auto;
+        }
+        .file-input-label {
+            transition: all 0.3s ease;
+        }
+        .file-input-label:hover {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .slide-container {
+            scroll-behavior: smooth;
+        }
+        .active-slide {
+            border: 3px solid #3b82f6;
+        }
+        .markdown-style h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .markdown-style h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+        }
+        .markdown-style ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        .markdown-style ol {
+            list-style-type: decimal;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        .markdown-style p {
+            margin-bottom: 1rem;
+        }
+        .markdown-style hr {
+            border-top: 1px solid #d1d5db;
+            margin: 1rem 0;
+        }
+        .slide-indicator {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">Text to Presentation</h1>
+            <p class="text-gray-600">Convert your text or .txt files into beautiful presentation slides</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Input Section -->
+            <div class="bg-white rounded-lg shadow-md p-6 lg:col-span-1">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Input Your Content</h2>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Choose input method:</label>
+                    <div class="flex space-x-2 mb-4">
+                        <button id="textTab" class="px-4 py-2 bg-blue-500 text-white rounded-md">Type Text</button>
+                        <button id="fileTab" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md">Upload File</button>
+                    </div>
+                    
+                    <div id="textInputSection">
+                        <textarea id="contentInput" class="w-full h-64 p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Type or paste your content here..."></textarea>
+                    </div>
+                    
+                    <div id="fileInputSection" class="hidden">
+                        <label class="file-input-label flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <i class="fas fa-file-upload text-4xl text-gray-400 mb-3"></i>
+                                <p class="mb-2 text-sm text-gray-500">Click to upload or drag and drop</p>
+                                <p class="text-xs text-gray-500">.TXT files only</p>
+                            </div>
+                            <input id="fileInput" type="file" class="hidden" accept=".txt">
+                        </label>
+                        <div id="fileNameDisplay" class="mt-2 text-sm text-gray-600 hidden"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Slide Options:</label>
+                    <div class="flex items-center mb-2">
+                        <input type="checkbox" id="autoSplit" class="mr-2" checked>
+                        <label for="autoSplit">Auto-split content into slides</label>
+                    </div>
+                    <div id="manualSplitOptions" class="hidden">
+                        <label class="block text-gray-700 mb-1">Split by:</label>
+                        <select id="splitOption" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="paragraph">Paragraphs</option>
+                            <option value="heading">Headings</option>
+                            <option value="pagebreak">Page breaks (---)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button id="generateBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
+                        <i class="fas fa-magic mr-2"></i> Generate Slides
+                    </button>
+                    <button id="clearBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 flex items-center">
+                        <i class="fas fa-trash-alt mr-2"></i> Clear
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Slides Preview Section -->
+            <div class="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Presentation Preview</h2>
+                    <div class="flex space-x-2">
+                        <button id="exportBtn" class="px-3 py-1 bg-green-500 text-white rounded-md text-sm flex items-center">
+                            <i class="fas fa-file-export mr-1"></i> Export
+                        </button>
+                        <div class="relative">
+                            <button id="exportOptionsBtn" class="px-3 py-1 bg-green-600 text-white rounded-md text-sm">
+                                <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div id="exportDropdown" class="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg hidden z-10">
+                                <div class="py-1">
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="exportPDF">PDF</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="exportPPTX">PPTX (PowerPoint)</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="exportHTML">HTML</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="slideControls" class="flex justify-between items-center mb-4 hidden">
+                    <div class="flex space-x-2">
+                        <button id="prevSlide" class="p-2 bg-gray-200 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button id="nextSlide" class="p-2 bg-gray-200 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <span id="slideCounter" class="text-gray-600">Slide 1 of 1</span>
+                    <div class="flex space-x-2">
+                        <button id="addSlide" class="p-2 bg-blue-100 text-blue-600 rounded-md hover:bg-blue-200">
+                            <i class="fas fa-plus"></i> Add Slide
+                        </button>
+                        <button id="deleteSlide" class="p-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="slideContainer" class="slide-container h-96 overflow-y-auto p-4 bg-gray-100 rounded-lg flex flex-col items-center justify-center">
+                    <div id="emptyState" class="text-center text-gray-500">
+                        <i class="fas fa-file-powerpoint text-5xl mb-4 text-gray-300"></i>
+                        <h3 class="text-xl font-medium mb-2">No slides yet</h3>
+                        <p class="mb-4">Enter your content and click "Generate Slides" to create your presentation</p>
+                    </div>
+                    
+                    <div id="slidesPreview" class="w-full space-y-4 hidden">
+                        <!-- Slides will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <div id="slideThumbnails" class="mt-4 flex space-x-2 overflow-x-auto py-2 hidden">
+                    <!-- Slide thumbnails will be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const textTab = document.getElementById('textTab');
+            const fileTab = document.getElementById('fileTab');
+            const textInputSection = document.getElementById('textInputSection');
+            const fileInputSection = document.getElementById('fileInputSection');
+            const contentInput = document.getElementById('contentInput');
+            const fileInput = document.getElementById('fileInput');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            const autoSplit = document.getElementById('autoSplit');
+            const manualSplitOptions = document.getElementById('manualSplitOptions');
+            const generateBtn = document.getElementById('generateBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const slidesPreview = document.getElementById('slidesPreview');
+            const emptyState = document.getElementById('emptyState');
+            const slideControls = document.getElementById('slideControls');
+            const slideContainer = document.getElementById('slideContainer');
+            const slideThumbnails = document.getElementById('slideThumbnails');
+            const prevSlide = document.getElementById('prevSlide');
+            const nextSlide = document.getElementById('nextSlide');
+            const slideCounter = document.getElementById('slideCounter');
+            const addSlide = document.getElementById('addSlide');
+            const deleteSlide = document.getElementById('deleteSlide');
+            const exportBtn = document.getElementById('exportBtn');
+            const exportOptionsBtn = document.getElementById('exportOptionsBtn');
+            const exportDropdown = document.getElementById('exportDropdown');
+            const exportPDF = document.getElementById('exportPDF');
+            const exportPPTX = document.getElementById('exportPPTX');
+            const exportHTML = document.getElementById('exportHTML');
+            
+            // State variables
+            let currentSlideIndex = 0;
+            let slides = [];
+            
+            // Tab switching
+            textTab.addEventListener('click', function() {
+                textTab.classList.add('bg-blue-500', 'text-white');
+                textTab.classList.remove('bg-gray-200', 'text-gray-700');
+                fileTab.classList.add('bg-gray-200', 'text-gray-700');
+                fileTab.classList.remove('bg-blue-500', 'text-white');
+                textInputSection.classList.remove('hidden');
+                fileInputSection.classList.add('hidden');
+            });
+            
+            fileTab.addEventListener('click', function() {
+                fileTab.classList.add('bg-blue-500', 'text-white');
+                fileTab.classList.remove('bg-gray-200', 'text-gray-700');
+                textTab.classList.add('bg-gray-200', 'text-gray-700');
+                textTab.classList.remove('bg-blue-500', 'text-white');
+                fileInputSection.classList.remove('hidden');
+                textInputSection.classList.add('hidden');
+            });
+            
+            // File input handling
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    fileNameDisplay.textContent = `Selected file: ${file.name}`;
+                    fileNameDisplay.classList.remove('hidden');
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        contentInput.value = e.target.result;
+                    };
+                    reader.readAsText(file);
+                }
+            });
+            
+            // Auto-split toggle
+            autoSplit.addEventListener('change', function() {
+                if (!this.checked) {
+                    manualSplitOptions.classList.remove('hidden');
+                } else {
+                    manualSplitOptions.classList.add('hidden');
+                }
+            });
+            
+            // Generate slides
+            generateBtn.addEventListener('click', function() {
+                const content = contentInput.value.trim();
+                if (!content) {
+                    alert('Please enter some content first.');
+                    return;
+                }
+                
+                // Clear previous slides
+                slides = [];
+                slidesPreview.innerHTML = '';
+                slideThumbnails.innerHTML = '';
+                
+                // Split content into slides based on selected method
+                if (autoSplit.checked) {
+                    // Enhanced auto-split logic that looks for slide indicators
+                    const slidePattern = /(?:^|\n)\s*(?:Slide|Slide\s*#?|Page)\s*([0-9]+|[A-Za-z]+)\s*[:.-]?\s*(?:\n|$)/gi;
+                    let lastIndex = 0;
+                    let match;
+                    
+                    // First pass - find all slide indicators
+                    const slideStarts = [];
+                    while ((match = slidePattern.exec(content)) !== null) {
+                        slideStarts.push({
+                            index: match.index,
+                            text: match[0].trim(),
+                            number: match[1]
+                        });
+                    }
+                    
+                    // If no slide indicators found, fall back to paragraph splitting
+                    if (slideStarts.length === 0) {
+                        slides = content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0);
+                    } else {
+                        // Create slides based on indicators
+                        for (let i = 0; i < slideStarts.length; i++) {
+                            const start = slideStarts[i].index;
+                            const end = i < slideStarts.length - 1 ? slideStarts[i + 1].index : content.length;
+                            const slideContent = content.substring(start, end).trim();
+                            slides.push(slideContent);
+                        }
+                        
+                        // If there's content before the first slide, add it as first slide
+                        if (slideStarts.length > 0 && slideStarts[0].index > 0) {
+                            const firstContent = content.substring(0, slideStarts[0].index).trim();
+                            if (firstContent) {
+                                slides.unshift(firstContent);
+                            }
+                        }
+                    }
+                } else {
+                    const splitOption = document.getElementById('splitOption').value;
+                    if (splitOption === 'paragraph') {
+                        slides = content.split('\n\n').map(p => p.trim()).filter(p => p.length > 0);
+                    } else if (splitOption === 'heading') {
+                        // Split by headings (lines that start with #)
+                        const lines = content.split('\n');
+                        let currentSlide = '';
+                        
+                        for (const line of lines) {
+                            if (line.trim().startsWith('#') && currentSlide) {
+                                slides.push(currentSlide.trim());
+                                currentSlide = line + '\n';
+                            } else {
+                                currentSlide += line + '\n';
+                            }
+                        }
+                        
+                        if (currentSlide.trim()) {
+                            slides.push(currentSlide.trim());
+                        }
+                    } else if (splitOption === 'pagebreak') {
+                        // Split by page breaks (---)
+                        slides = content.split('---').map(s => s.trim()).filter(s => s.length > 0);
+                    }
+                }
+                
+                // If no slides were created (unlikely), create one with all content
+                if (slides.length === 0) {
+                    slides.push(content);
+                }
+                
+                // Clean up slide content (remove duplicate slide indicators)
+                slides = slides.map(slide => {
+                    // Remove slide indicator from content (keep it in the slide title)
+                    const cleaned = slide.replace(/^(Slide|Slide\s*#?|Page)\s*([0-9]+|[A-Za-z]+)\s*[:.-]?\s*\n?/i, '');
+                    return cleaned.trim();
+                });
+                
+                // Render slides
+                renderSlides();
+                
+                // Show slides and hide empty state
+                slidesPreview.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                slideControls.classList.remove('hidden');
+                slideThumbnails.classList.remove('hidden');
+                
+                // Update slide counter
+                updateSlideCounter();
+                
+                // Scroll to first slide
+                currentSlideIndex = 0;
+                showSlide(currentSlideIndex);
+            });
+            
+            // Clear everything
+            clearBtn.addEventListener('click', function() {
+                contentInput.value = '';
+                fileInput.value = '';
+                fileNameDisplay.textContent = '';
+                fileNameDisplay.classList.add('hidden');
+                slides = [];
+                slidesPreview.innerHTML = '';
+                slideThumbnails.innerHTML = '';
+                slidesPreview.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                slideControls.classList.add('hidden');
+                slideThumbnails.classList.add('hidden');
+            });
+            
+            // Navigation controls
+            prevSlide.addEventListener('click', function() {
+                if (currentSlideIndex > 0) {
+                    currentSlideIndex--;
+                    showSlide(currentSlideIndex);
+                }
+            });
+            
+            nextSlide.addEventListener('click', function() {
+                if (currentSlideIndex < slides.length - 1) {
+                    currentSlideIndex++;
+                    showSlide(currentSlideIndex);
+                }
+            });
+            
+            // Add new slide
+            addSlide.addEventListener('click', function() {
+                const newSlideContent = prompt('Enter content for the new slide:', 'New slide content');
+                if (newSlideContent !== null) {
+                    slides.push(newSlideContent);
+                    renderSlides();
+                    currentSlideIndex = slides.length - 1;
+                    showSlide(currentSlideIndex);
+                    updateSlideCounter();
+                }
+            });
+            
+            // Delete current slide
+            deleteSlide.addEventListener('click', function() {
+                if (slides.length > 1) {
+                    slides.splice(currentSlideIndex, 1);
+                    renderSlides();
+                    
+                    if (currentSlideIndex >= slides.length) {
+                        currentSlideIndex = slides.length - 1;
+                    }
+                    
+                    showSlide(currentSlideIndex);
+                    updateSlideCounter();
+                } else {
+                    alert('You need to have at least one slide.');
+                }
+            });
+            
+            // Export dropdown
+            exportOptionsBtn.addEventListener('click', function() {
+                exportDropdown.classList.toggle('hidden');
+            });
+            
+            // Close dropdown when clicking elsewhere
+            document.addEventListener('click', function(e) {
+                if (!exportOptionsBtn.contains(e.target) && !exportDropdown.contains(e.target)) {
+                    exportDropdown.classList.add('hidden');
+                }
+            });
+            
+            // Export handlers (placeholder - would need server-side or library for actual export)
+            exportPDF.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('PDF export would be implemented here with a library like jsPDF or a server-side solution.');
+            });
+            
+            exportPPTX.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('PowerPoint export would require a library like pptxgenjs or a server-side solution.');
+            });
+            
+            exportHTML.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('HTML export would package the slides as a standalone HTML presentation.');
+            });
+            
+            // Helper functions
+            function renderSlides() {
+                slidesPreview.innerHTML = '';
+                slideThumbnails.innerHTML = '';
+                
+                slides.forEach((slideContent, index) => {
+                    // Extract slide title (first line or generate one)
+                    let slideTitle = `Slide ${index + 1}`;
+                    const firstLine = slideContent.split('\n')[0];
+                    if (firstLine && firstLine.trim().length > 0) {
+                        slideTitle = firstLine.trim();
+                        // Remove markdown headers if present
+                        slideTitle = slideTitle.replace(/^#+\s*/, '');
+                    }
+                    
+                    // Create slide preview
+                    const slideElement = document.createElement('div');
+                    slideElement.className = `slide w-full h-full bg-white rounded-lg p-6 hidden ${index === 0 ? 'active-slide' : ''}`;
+                    slideElement.id = `slide-${index}`;
+                    slideElement.innerHTML = `
+                        <div class="flex items-center mb-4">
+                            <span class="slide-indicator">Slide ${index + 1}</span>
+                            <h2 class="text-xl font-semibold text-gray-800">${slideTitle}</h2>
+                        </div>
+                        <div class="slide-content markdown-style">${formatContent(slideContent)}</div>
+                    `;
+                    slidesPreview.appendChild(slideElement);
+                    
+                    // Create thumbnail
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = `flex-shrink-0 w-20 h-12 bg-white rounded cursor-pointer border ${index === 0 ? 'border-blue-500' : 'border-gray-300'}`;
+                    thumbnail.innerHTML = `
+                        <div class="text-xs p-1 overflow-hidden h-full">${truncateContent(slideTitle)}</div>
+                    `;
+                    thumbnail.addEventListener('click', () => {
+                        currentSlideIndex = index;
+                        showSlide(currentSlideIndex);
+                    });
+                    slideThumbnails.appendChild(thumbnail);
+                });
+            }
+            
+            function showSlide(index) {
+                // Hide all slides
+                document.querySelectorAll('.slide').forEach(slide => {
+                    slide.classList.add('hidden');
+                    slide.classList.remove('active-slide');
+                });
+                
+                // Show selected slide
+                const slideToShow = document.getElementById(`slide-${index}`);
+                if (slideToShow) {
+                    slideToShow.classList.remove('hidden');
+                    slideToShow.classList.add('active-slide');
+                }
+                
+                // Update active thumbnail
+                document.querySelectorAll('#slideThumbnails > div').forEach((thumb, i) => {
+                    if (i === index) {
+                        thumb.classList.add('border-blue-500');
+                        thumb.classList.remove('border-gray-300');
+                    } else {
+                        thumb.classList.remove('border-blue-500');
+                        thumb.classList.add('border-gray-300');
+                    }
+                });
+                
+                // Update counter
+                updateSlideCounter();
+                
+                // Scroll to slide
+                slideContainer.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+            
+            function updateSlideCounter() {
+                slideCounter.textContent = `Slide ${currentSlideIndex + 1} of ${slides.length}`;
+            }
+            
+            function formatContent(content) {
+                // Simple markdown formatting
+                let formatted = content;
+                
+                // Headers
+                formatted = formatted.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+                formatted = formatted.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+                formatted = formatted.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+                
+                // Lists
+                formatted = formatted.replace(/^\* (.*$)/gm, '<li>$1</li>');
+                formatted = formatted.replace(/^\- (.*$)/gm, '<li>$1</li>');
+                formatted = formatted.replace(/^\+ (.*$)/gm, '<li>$1</li>');
+                formatted = formatted.replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
+                
+                // Line breaks
+                formatted = formatted.replace(/\n/g, '<br>');
+                
+                // Bold and italic
+                formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                formatted = formatted.replace(/\_(.*?)\_/g, '<em>$1</em>');
+                
+                return formatted;
+            }
+            
+            function truncateContent(content, maxLength = 50) {
+                if (content.length <= maxLength) return content;
+                return content.substring(0, maxLength) + '...';
+            }
+        });
+    </script>
+</body>
+</html>
