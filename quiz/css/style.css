@@ -1,0 +1,34 @@
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+.pulse-animation {
+  animation: pulse 1.5s infinite;
+}
+.option-selected {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  border-color: #3b82f6 !important;
+}
+.option-correct {
+  background-color: #10b981 !important;
+  color: white !important;
+  border-color: #10b981 !important;
+}
+.option-wrong {
+  background-color: #ef4444 !important;
+  color: white !important;
+  border-color: #ef4444 !important;
+}
+.progress-bar {
+  transition: width 0.3s ease;
+}
+.timer-low {
+  color: #ef4444;
+  animation: pulse 0.5s infinite;
+}
