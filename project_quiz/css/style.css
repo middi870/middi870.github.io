@@ -1,0 +1,27 @@
+body {
+  background: #ffeaa7;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.quiz-container {
+  background: #fab1a0;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+  width: 300px;
+  text-align: center;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #74b9ff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
