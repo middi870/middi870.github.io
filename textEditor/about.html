@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -76,25 +77,47 @@
     }
   </style>
 </head>
+
 <body>
   <div class="about-container">
     <h1>Text Editor</h1>
     <p>
-      This is a lightweight, browser-based text/code editor that supports tabs, multiple file types, and theme switching. It’s built to be fast, responsive, and intuitive — great for taking notes or editing code snippets.
+      This is a lightweight, browser-based text/code editor that supports tabs, multiple file types, and theme
+      switching. It’s built to be fast, responsive, and intuitive — great for taking notes or editing code snippets.
     </p>
 
     <div class="info">
       <p><strong>Version:</strong> 1.0.0</p>
       <p><strong>Created by:</strong> MKI63</p>
-      <p><strong>Technologies:</strong> HTML, CSS, JavaScript, CodeMirror</p>
+      <p><strong>Technologies: </strong> HTML, CSS, JavaScript, CodeMirror</p>
     </div>
 
-    <a href="index.html" class="back-btn">← Back to Editor</a>
+    <!-- <a href="smartTextEditor.html" class="back-btn">← Back to Editor</a> -->
+     <a id="backBtn" href="index.html" class="back-btn">← Back</a>
+
   </div>
 
   <script>
     // Match theme from localStorage
     document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
   </script>
+  <script>
+    // Match theme from localStorage
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+
+    // Dynamically set back link based on where the user came from
+    const referrer = document.referrer;
+    const backBtn = document.getElementById('backBtn');
+
+    if (referrer.includes("textEditor.html")) {
+      backBtn.href = "textEditor.html";
+    } else if (referrer.includes("smartTextEditor.html")) {
+      backBtn.href = "smartTextEditor.html";
+    } else {
+      backBtn.href = "index.html"; // fallback
+    }
+  </script>
+
 </body>
+
 </html>
