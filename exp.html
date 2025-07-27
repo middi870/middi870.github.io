@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Projects Index</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-light: #f0f4ff;
+      --text-light: #1a1a2e;
+      --bg-dark: #0a0a1a;
+      --text-dark: #f0f0ff;
+      --accent: #6e45e2;
+      --accent-light: #88d3ce;
+      --card-bg-light: rgba(255, 255, 255, 0.8);
+      --card-bg-dark: rgba(30, 30, 60, 0.8);
+      --card-shadow: 0 8px 32px rgba(110, 69, 226, 0.1);
+      --card-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --glass-border-light: rgba(255, 255, 255, 0.3);
+      --glass-border-dark: rgba(0, 0, 0, 0.3);
+    }
+
+    @property --gradient-angle {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: all 0.3s ease;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(110, 69, 226, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(136, 211, 206, 0.05) 0%, transparent 20%);
+      background-size: 200% 200%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      text-align: center;
+      background: var(--card-bg-light);
+      padding: 2.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      max-width: 32rem;
+      width: 100%;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(0);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border-light);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      z-index: -1;
+      background: conic-gradient(
+        from var(--gradient-angle),
+        var(--accent),
+        var(--accent-light),
+        var(--accent)
+      );
+      border-radius: inherit;
+      animation: rotation 5s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes rotation {
+      to { --gradient-angle: 360deg; }
+    }
+
+    .container:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark .container {
+      background-color: var(--card-bg-dark);
+      box-shadow: var(--card-shadow-dark);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.875rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      background: linear-gradient(90deg, var(--accent), #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    li {
+      transition: transform 0.2s ease;
+    }
+
+    li:hover {
+      transform: translateX(4px);
+    }
+
+    a {
+      display: block;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 1.125rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      position: relative;
+      overflow: hidden;
+      background: rgba(110, 69, 226, 0.1);
+    }
+
+    a:hover {
+      color: white;
+      background: linear-gradient(45deg, var(--accent), var(--accent-light));
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(110, 69, 226, 0.2);
+    }
+
+    a::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: all 0.5s ease;
+    }
+
+    a:hover::after {
+      left: 100%;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      padding: 0.75rem 1.25rem;
+      background: linear-gradient(45deg, var(--accent), var(--accent-light));
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 8px 15px rgba(110, 69, 226, 0.3);
+      font-weight: 600;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 12px 20px rgba(110, 69, 226, 0.4);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1.5rem;
+        margin: 0 1rem;
+      }
+
+      .theme-toggle {
+        top: 0.75rem;
+        right: 0.75rem;
+        font-size: 0.85rem;
+        padding: 0.375rem 0.75rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      a {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+    <div class="container">
+      <h2>My Projects Index</h2>
+      <ul>
+        <li><a href="textEditor/textEditor.html">Text Editor</a></li>
+        <li><a href="textEditor/smartTextEditor.html">Smart Text Editor</a></li>
+        <li><a href="textEditor/about.html">About Text Editor</a></li>
+        <li><a href="quiz/index.html">Quiz</a></li>
+        <li><a href="project_quiz/index.html">Quiz2</a></li>
+        <li><a href="project_quiz2/index.html">Quiz3</a></li>
+        <li><a href="texttopdf.html">Text to PDF</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    // Load saved theme on page load
+    (function () {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+      }
+    })();
+  </script>
+</body>
+</html>
