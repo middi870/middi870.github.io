@@ -1,34 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Projects Index</title>
+  <style>
+    :root {
+      --bg-color: #f4f4f9;
+      --text-color: #2c3e50;
+      --card-bg: #ffffff;
+      --accent-color: #3498db;
+      --accent-dark: #2573a6;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1e1e1e;
+      --text-color: #ecf0f1;
+      --card-bg: #2c2c2c;
+      --accent-color: #2980b9;
+      --accent-dark: #1a5d87;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: var(--card-bg);
+      padding: 2em;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.8em;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1.5em;
+    }
+
+    li {
+      margin: 0.6em 0;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+      background-color: var(--accent-color);
+      padding: 10px 18px;
+      border-radius: 6px;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    a:hover {
+      background-color: var(--accent-dark);
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--accent-dark);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.2em;
+      }
+
+      a {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+  <div class="container">
     <h2>My Projects Index</h2>
     <ul>
-        <li>
-            <a href="textEditor/textEditor.html">Text Editor</a>
-        </li>
-        <li>
-            <a href="textEditor/smartTextEditor.html">Smart Text Editor</a>
-        </li>
-        <li>
-            <a href="textEditor/about.html">About Text Editor</a>
-        </li>
-        <li>
-            <a href="quiz/index.html">Quiz</a>
-        </li>
-        <li>
-            <a href="project_quiz/index.html">Quiz2</a>
-        </li>
-        <li>
-            <a href="project_quiz2/index.html">Quiz3</a>
-        </li>
-        <li>
-            <a href="texttopdf.html">Text to PDF</a>
-        </li>
+      <li><a href="textEditor/textEditor.html">Text Editor</a></li>
+      <li><a href="textEditor/smartTextEditor.html">Smart Text Editor</a></li>
+      <li><a href="textEditor/about.html">About Text Editor</a></li>
+      <li><a href="quiz/index.html">Quiz</a></li>
+      <li><a href="project_quiz/index.html">Quiz 2</a></li>
+      <li><a href="project_quiz2/index.html">Quiz 3</a></li>
+      <li><a href="textToPPT/texttoPPT.html">Text to PDF</a></li>
+      <li><a href="texttopdf.html">Text to PDF</a></li>
     </ul>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    }
+
+    // Load stored theme on start
+    document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "light");
+  </script>
 </body>
 </html>
