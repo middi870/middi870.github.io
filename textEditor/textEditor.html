@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Text Editor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/eclipse.min.css"/>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #2c3e50;
+      --header-bg: #2c3e50;
+      --header-text: #ffffff;
+      --tab-bg: #dcdcdc;
+      --tab-active: #ffffff;
+      --add-tab-color: #34495e;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1e1e1e;
+      --text-color: #ecf0f1;
+      --header-bg: #1e1e1e;
+      --header-text: #ecf0f1;
+      --tab-bg: #2e2e2e;
+      --tab-active: #3c3c3c;
+      --add-tab-color: #95a5a6;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    header {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.6em 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .app-title {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .menu-toggle {
+      font-size: 1.3em;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+      margin-right: 10px;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 10px;
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      border: 1px solid #555;
+      border-radius: 4px;
+      display: none;
+      flex-direction: column;
+      z-index: 10;
+      min-width: 120px;
+    }
+
+    .dropdown.show {
+      display: flex;
+    }
+
+    .dropdown button {
+      background: none;
+      color: inherit;
+      border: none;
+      text-align: left;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.95em;
+    }
+
+    .dropdown button:hover {
+      background-color: #444;
+    }
+
+    .header-buttons button {
+      margin-left: 10px;
+      padding: 6px 14px;
+      border: none;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      background-color: var(--tab-bg);
+      padding: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+      border-bottom: 1px solid #ccc;
+      flex: 0 0 auto;
+      min-height: 42px;
+      max-height: 42px;
+      box-sizing: border-box;
+    }
+
+    .tab {
+      position: relative;
+      background-color: var(--tab-bg);
+      padding: 5px 10px;
+      margin-right: 5px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 100px;
+      transition: background 0.2s ease;
+    }
+
+    .tab.active {
+      background-color: var(--tab-active);
+      font-weight: bold;
+      border: 1px solid #bbb;
+    }
+
+    .name-container {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tab-name {
+      pointer-events: none;
+    }
+
+    .rename-icon {
+      font-size: 0.85em;
+      color: gray;
+      cursor: pointer;
+      display: none;
+    }
+
+    .tab:hover .rename-icon {
+      display: inline;
+    }
+
+    .tab input.rename-input {
+      width: 120px;
+      border: 1px solid #999;
+      font-size: 1em;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background-color: var(--tab-active);
+      color: var(--text-color);
+    }
+
+    .tab span.close-btn {
+      margin-left: 8px;
+      color: red;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .add-tab {
+      cursor: pointer;
+      font-size: 1.3em;
+      padding: 0 10px;
+      color: var(--add-tab-color);
+    }
+
+    .editor-container {
+      flex-grow: 1;
+      min-height: 0;
+      height: 100%;
+    }
+
+    .CodeMirror {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; align-items: center;">
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+      <div class="app-title">Text Editor</div>
+    </div>
+    <div class="dropdown" id="menuDropdown">
+      <button onclick="toggleTheme()">🌓 Toggle Theme</button>
+      <button onclick="alert('Text Editor by MKI63')">ℹ️ About</button>
+    </div>
+    <div class="header-buttons">
+      <button onclick="openFileFromDisk()">📂 Open</button>
+      <button onclick="saveCurrentFile()">💾 Save</button>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabBar"></div>
+  <div class="editor-container">
+    <textarea id="editor"></textarea>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      lineNumbers: true,
+      mode: "text/plain",
+      theme: getSavedTheme() === 'dark' ? 'dracula' : 'eclipse'
+    });
+
+    let openFiles = [];
+    let currentFileId = null;
+    let fileCounter = 1;
+
+    function createNewFile(name = `untitled${fileCounter++}.txt`, content = "") {
+      const id = Date.now().toString();
+      openFiles.push({ id, name, content });
+      currentFileId = id;
+      renderTabs();
+      editor.setValue(content);
+      editor.refresh();
+    }
+
+    function switchTab(id) {
+      const current = openFiles.find(f => f.id === currentFileId);
+      if (current) current.content = editor.getValue();
+      currentFileId = id;
+      const file = openFiles.find(f => f.id === id);
+      if (file) editor.setValue(file.content);
+      renderTabs();
+      editor.refresh();
+    }
+
+    function saveCurrentFile() {
+      const file = openFiles.find(f => f.id === currentFileId);
+      if (!file) return;
+      file.content = editor.getValue();
+      const blob = new Blob([file.content], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = file.name;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function openFileFromDisk() {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".txt,.js,.html,.css,.json,.md";
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            createNewFile(file.name, reader.result);
+          };
+          reader.readAsText(file);
+        }
+      };
+      input.click();
+    }
+
+    function closeTab(e, id) {
+      e.stopPropagation();
+      const index = openFiles.findIndex(f => f.id === id);
+      if (index !== -1) {
+        openFiles.splice(index, 1);
+        if (currentFileId === id) {
+          currentFileId = openFiles.length ? openFiles[0].id : null;
+          editor.setValue(openFiles[0]?.content || "");
+        }
+        renderTabs();
+      }
+    }
+
+    function renderTabs() {
+      const tabBar = document.getElementById("tabBar");
+      tabBar.innerHTML = "";
+
+      openFiles.forEach(file => {
+        const tab = document.createElement("div");
+        tab.className = "tab" + (file.id === currentFileId ? " active" : "");
+        tab.onclick = () => switchTab(file.id);
+
+        const nameContainer = document.createElement("div");
+        nameContainer.className = "name-container";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "tab-name";
+        nameSpan.textContent = file.name;
+
+        const renameIcon = document.createElement("span");
+        renameIcon.className = "rename-icon";
+        renameIcon.innerHTML = "✎";
+        renameIcon.title = "Rename file";
+        renameIcon.onclick = (e) => {
+          e.stopPropagation();
+          const input = document.createElement("input");
+          input.className = "rename-input";
+          input.value = file.name;
+          input.onblur = () => {
+            file.name = input.value.trim() || file.name;
+            renderTabs();
+          };
+          input.onkeydown = (e) => {
+            if (e.key === "Enter") input.blur();
+          };
+          nameContainer.replaceChild(input, nameSpan);
+          renameIcon.style.display = "none";
+          input.focus();
+        };
+
+        nameContainer.appendChild(nameSpan);
+        nameContainer.appendChild(renameIcon);
+
+        const closeBtn = document.createElement("span");
+        closeBtn.className = "close-btn";
+        closeBtn.textContent = "×";
+        closeBtn.onclick = (e) => closeTab(e, file.id);
+
+        tab.appendChild(nameContainer);
+        tab.appendChild(closeBtn);
+        tabBar.appendChild(tab);
+      });
+
+      const addTab = document.createElement("div");
+      addTab.className = "add-tab";
+      addTab.textContent = "＋";
+      addTab.onclick = () => createNewFile();
+      tabBar.appendChild(addTab);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const newTheme = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      editor.setOption('theme', newTheme === 'dark' ? 'dracula' : 'eclipse');
+    }
+
+    function getSavedTheme() {
+      return localStorage.getItem('theme') || 'light';
+    }
+
+    function toggleMenu() {
+      const menu = document.getElementById("menuDropdown");
+      menu.classList.toggle("show");
+    }
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".menu-toggle") && !e.target.closest("#menuDropdown")) {
+        document.getElementById("menuDropdown").classList.remove("show");
+      }
+    });
+
+    document.documentElement.setAttribute('data-theme', getSavedTheme());
+    createNewFile();
+  </script>
+</body>
+</html>
