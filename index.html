@@ -1,61 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Projects Index</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project Index</title>
   <style>
     :root {
-      --bg-gradient-light: linear-gradient(135deg, #e0f7fa, #ffffff);
-      --bg-gradient-dark: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      --text-color: #2c3e50;
-      --card-bg: rgba(255, 255, 255, 0.8);
-      --glass-blur: blur(10px);
-      --accent-color: #00bcd4;
-      --accent-hover: #0097a7;
-    }
-
-    [data-theme="dark"] {
-      --bg-gradient-light: var(--bg-gradient-dark);
-      --text-color: #ecf0f1;
-      --card-bg: rgba(0, 0, 0, 0.35);
-      --accent-color: #26c6da;
-      --accent-hover: #00acc1;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      --bg-light: #f0f4f8;
+      --bg-dark: #0f1117;
+      --text-light: #1a1a1a;
+      --text-dark: #f2f2f2;
+      --accent: #6e45e2;
+      --accent-light: #88d3ce;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-bg-dark: rgba(30, 30, 60, 0.95);
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --card-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.5);
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--bg-gradient-light);
-      color: var(--text-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(136, 211, 206, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(110, 69, 226, 0.1) 0%, transparent 40%);
+      transition: background-color 0.4s, color 0.4s;
     }
 
     .container {
+      max-width: 700px;
+      margin: 5% auto;
+      padding: 2rem;
       background: var(--card-bg);
-      backdrop-filter: var(--glass-blur);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
       border-radius: 20px;
-      padding: 2.5em;
-      max-width: 500px;
-      width: 90%;
-      text-align: center;
-      animation: fadeInUp 0.6s ease-out;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      transition: background 0.4s ease;
     }
 
     h2 {
-      margin-bottom: 1.5em;
-      font-size: 1.9em;
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     ul {
@@ -64,67 +56,76 @@
     }
 
     li {
-      margin: 0.8em 0;
+      margin: 1rem 0;
     }
 
     a {
-      display: inline-block;
+      display: block;
+      padding: 0.75rem 1.2rem;
+      background: rgba(136, 211, 206, 0.15);
+      border-radius: 12px;
       text-decoration: none;
-      color: white;
-      background: var(--accent-color);
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 500;
+      font-weight: 600;
+      color: var(--accent);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
     }
 
     a:hover {
-      background: var(--accent-hover);
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 6px 16px rgba(0, 188, 212, 0.4);
+      background: linear-gradient(45deg, var(--accent-light), var(--accent));
+      color: #fff;
+      transform: translateY(-2px);
     }
 
-    .theme-toggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: var(--accent-color);
-      color: white;
+    .toggle-theme {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: var(--accent);
+      color: #fff;
       border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .theme-toggle:hover {
-      background: var(--accent-hover);
+    /* Dark Theme */
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(136, 211, 206, 0.08) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(110, 69, 226, 0.08) 0%, transparent 20%);
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    body.dark .container {
+      background: var(--card-bg-dark);
+      box-shadow: var(--card-shadow-dark);
+      border-color: rgba(255, 255, 255, 0.08);
     }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 1.5em;
-      }
+    body.dark a {
+      background: rgba(136, 211, 206, 0.1);
+      color: #88d3ce;
+    }
+
+    body.dark a:hover {
+      background: linear-gradient(45deg, var(--accent-light), var(--accent));
+      color: #0a0a1a;
+    }
+
+    body.dark .toggle-theme {
+      background: var(--accent-light);
+      color: #000;
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+  <button class="toggle-theme" onclick="toggleTheme()">🌗 Theme</button>
   <div class="container">
-    <h2>🚀 My Projects</h2>
+    <h2>📚 My Projects Index</h2>
     <ul>
       <li><a href="textEditor/textEditor.html">Text Editor</a></li>
       <li><a href="textEditor/smartTextEditor.html">Smart Text Editor</a></li>
@@ -133,21 +134,15 @@
       <li><a href="project_quiz/index.html">Quiz 2</a></li>
       <li><a href="project_quiz2/index.html">Quiz 3</a></li>
       <li><a href="textToPPT/texttoPPT.html">Text to PDF</a></li>
+      <li><a href="exp.html">Experiment</a></li>
       <!-- <li><a href="texttopdf.html">Text to PDF</a></li> -->
     </ul>
   </div>
 
   <script>
     function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme");
-      const next = current === "dark" ? "light" : "dark";
-      html.setAttribute("data-theme", next);
-      localStorage.setItem("theme", next);
+      document.body.classList.toggle("dark");
     }
-
-    // Load theme from localStorage
-    document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "light");
   </script>
 </body>
 </html>
