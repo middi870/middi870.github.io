@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Text Editor</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/eclipse.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/eclipse.min.css" />
   <style>
     :root {
       --bg-color: #ffffff;
@@ -194,6 +195,7 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <div style="display: flex; align-items: center;">
@@ -202,7 +204,9 @@
     </div>
     <div class="dropdown" id="menuDropdown">
       <button onclick="toggleTheme()">🌓 Toggle Theme</button>
-      <button onclick="alert('Text Editor by MKI63')">ℹ️ About</button>
+      <!-- <button onclick="alert('Text Editor by MKI63')">ℹ️ About</button> -->
+      <button onclick="window.location.href='about.html'">ℹ️ About</button>
+
     </div>
     <div class="header-buttons">
       <button onclick="openFileFromDisk()">📂 Open</button>
@@ -373,4 +377,5 @@
     createNewFile();
   </script>
 </body>
+
 </html>

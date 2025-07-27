@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About - Text Editor</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #2c3e50;
+      --card-bg: #f9f9f9;
+      --header-color: #2c3e50;
+      --accent: #3498db;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1e1e1e;
+      --text-color: #ecf0f1;
+      --card-bg: #2b2b2b;
+      --header-color: #ecf0f1;
+      --accent: #2980b9;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .about-container {
+      max-width: 600px;
+      width: 90%;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 2em;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .about-container h1 {
+      margin-top: 0;
+      color: var(--header-color);
+    }
+
+    .about-container p {
+      font-size: 1em;
+      line-height: 1.6;
+    }
+
+    .about-container .info {
+      margin-top: 1.5em;
+    }
+
+    .about-container .info strong {
+      display: inline-block;
+      width: 100px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 2em;
+      text-decoration: none;
+      color: white;
+      background-color: var(--accent);
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+
+    .back-btn:hover {
+      background-color: #2573a6;
+    }
+  </style>
+</head>
+<body>
+  <div class="about-container">
+    <h1>Text Editor</h1>
+    <p>
+      This is a lightweight, browser-based text/code editor that supports tabs, multiple file types, and theme switching. It’s built to be fast, responsive, and intuitive — great for taking notes or editing code snippets.
+    </p>
+
+    <div class="info">
+      <p><strong>Version:</strong> 1.0.0</p>
+      <p><strong>Created by:</strong> MKI63</p>
+      <p><strong>Technologies:</strong> HTML, CSS, JavaScript, CodeMirror</p>
+    </div>
+
+    <a href="index.html" class="back-btn">← Back to Editor</a>
+  </div>
+
+  <script>
+    // Match theme from localStorage
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+  </script>
+</body>
+</html>
