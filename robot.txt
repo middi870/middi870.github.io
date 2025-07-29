@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://middi870.github.io/sitemap.xml
