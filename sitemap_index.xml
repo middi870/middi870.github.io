@@ -1,71 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-
-
-<url>
-  <loc>https://middi870.github.io/</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>1.00</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/Midway_Resume.pdf</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/textEditor/textEditor.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/textEditor/smartTextEditor.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/web-ide/ide.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/quiz/index.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/project_quiz/index.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/project_quiz2/index.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/textToPPT/texttoPPT.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/exp.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/old_index.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://middi870.github.io/textEditor/about.html</loc>
-  <lastmod>2025-07-29T13:00:19+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-
-
-</urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://middi870.github.io/sitemap.xml</loc>
+    <lastmod>2025-09-05</lastmod>
+  </sitemap>
+</sitemapindex>
