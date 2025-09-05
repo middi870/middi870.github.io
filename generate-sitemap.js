@@ -77,19 +77,35 @@ ${files
 
 // Main
 function generateSitemaps() {
-  const htmlFiles = getHtmlFiles(__dirname);
-  const urls = htmlFiles.map(generateUrlTag);
+  try {
+    const htmlFiles = getHtmlFiles(__dirname);
 
-  // Split into multiple sitemap files if needed
-  const sitemapFiles = [];
-  for (let i = 0; i < urls.length; i += MAX_URLS_PER_SITEMAP) {
-    const chunk = urls.slice(i, i + MAX_URLS_PER_SITEMAP);
-    const filename = createSitemapFile(chunk, i === 0 ? 0 : i / MAX_URLS_PER_SITEMAP);
-    sitemapFiles.push(filename);
+    if (htmlFiles.length === 0) {
+      console.error("❌ No HTML files found in repository. Exiting.");
+      process.exit(1);
+    }
+
+    const urls = htmlFiles.map(generateUrlTag);
+
+    // Split into multiple sitemap files if needed
+    const sitemapFiles = [];
+    for (let i = 0; i < urls.length; i += MAX_URLS_PER_SITEMAP) {
+      const chunk = urls.slice(i, i + MAX_URLS_PER_SITEMAP);
+      const filename = createSitemapFile(
+        chunk,
+        i === 0 ? 0 : i / MAX_URLS_PER_SITEMAP
+      );
+      sitemapFiles.push(filename);
+    }
+
+    // Create index
+    createSitemapIndex(sitemapFiles);
+
+    console.log("🎉 All sitemaps generated successfully!");
+  } catch (err) {
+    console.error("❌ Error generating sitemap:", err.message);
+    process.exit(1);
   }
-
-  // Create index
-  createSitemapIndex(sitemapFiles);
 }
 
 generateSitemaps();

@@ -1,3 +1,5 @@
 User-agent: *
 Allow: /
-Sitemap: https://middi870.github.io/sitemap.xml
+
+# Point search engines to your sitemap index
+Sitemap: https://middi870.github.io/sitemap_index.xml
