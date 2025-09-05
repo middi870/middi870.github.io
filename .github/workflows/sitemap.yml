@@ -17,8 +17,13 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Debug repo structure
+        run: |
+          pwd
+          ls -la
+
       - name: Generate sitemap
-        run: node generate-sitemap.js
+        run: node ./generate-sitemap.js
 
       - name: Commit and push sitemap
         run: |
