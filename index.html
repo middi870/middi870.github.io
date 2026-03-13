@@ -1,793 +1,661 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Midway | Portfolio</title>
+  <title>middi870 — GitHub Hub</title>
   <link rel="icon" href="favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <meta name="google-site-verification" content="PqTwdbq38SiQ_-vCQVxS20joux2Q7LmMdFsbvpdDiC8" />
+  <meta name="description" content="middi870 — Aditya Ranjan Jha. Systems & Infrastructure Engineer. GitHub project hub." />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     :root {
-      --bg-light: #f0f4f8;
-      --bg-dark: #0f1117;
-      --text-light: #1a1a1a;
-      --text-dark: #f2f2f2;
-      --accent: #6e45e2;
-      --accent-light: #88d3ce;
-      --accent-gradient: linear-gradient(135deg, #6e45e2, #88d3ce);
-      --glass-light: rgba(255, 255, 255, 0.7);
-      --glass-dark: rgba(30, 30, 60, 0.6);
-      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.3);
-      --radius: 20px;
+      --bg:      #0b0c11;
+      --bg2:     #10121a;
+      --surface: #161820;
+      --border:  rgba(255,255,255,0.07);
+      --text:    #dde0f0;
+      --muted:   #6b6e88;
+      --amber:   #f0a500;
+      --green:   #00d4aa;
+      --red:     #ff6b6b;
+      --blue:    #60a5fa;
+      --mono:    'Fira Code', monospace;
+      --display: 'Syne', sans-serif;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 80px;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: "Outfit", sans-serif;
-      background: var(--bg-light);
-      color: var(--text-light);
-      transition: background 0.4s, color 0.4s;
+      font-family: var(--mono);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
       overflow-x: hidden;
-      line-height: 1.6;
     }
 
-    .toggle-theme {
+    /* ── SCANLINE TEXTURE ── */
+    body::after {
+      content: '';
       position: fixed;
-      top: 0.5rem;
-      right: 2rem;
-      z-index: 1000;
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 0.7rem;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: var(--transition);
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      );
+    }
+
+    /* ── WELCOME OVERLAY ── */
+    #welcome {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: var(--bg);
       display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .toggle-theme:hover {
-      transform: scale(1.1) rotate(15deg);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .toggle-theme svg {
-      width: 24px;
-      height: 24px;
-      display: block;
-      transition: transform 0.3s ease;
-    }
-
-    header {
-      height: 100vh;
-      background: var(--accent-gradient);
-      color: white;
-      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
       padding: 2rem;
-      position: relative;
-      overflow: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
     }
 
-    header::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-      transform: rotate(30deg);
-      pointer-events: none;
+    #welcome.hidden { opacity: 0; visibility: hidden; }
+
+    .welcome-tag {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
     }
 
-    .hero-content {
-      max-width: 800px;
-      backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: var(--radius);
-      padding: 3rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      position: relative;
-      z-index: 2;
-      animation: fadeInUp 1s ease-out;
+    .welcome-tag span {
+      color: var(--green);
+      animation: blink 1.2s step-end infinite;
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .hero-content h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 700;
+    .welcome-name {
+      font-family: var(--display);
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -2px;
+      line-height: 1;
       margin-bottom: 0.5rem;
-      letter-spacing: -0.5px;
     }
 
-    .hero-content p {
-      font-size: clamp(1.1rem, 2vw, 1.4rem);
-      margin: 1.5rem 0;
-      font-weight: 300;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+    .welcome-name em {
+      color: var(--amber);
+      font-style: normal;
     }
 
-    .resume-btn {
+    .welcome-role {
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 3rem;
+    }
+
+    .welcome-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-      padding: 0.9rem 2rem;
-      background: white;
-      color: var(--accent);
-      font-weight: 600;
-      border-radius: 50px;
+      gap: 0.7rem;
+      padding: 1rem 2.5rem;
+      background: var(--amber);
+      color: #0b0c11;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 6px;
       text-decoration: none;
-      transition: var(--transition);
-      box-shadow: var(--shadow);
-      border: 2px solid transparent;
-      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      margin-bottom: 1.5rem;
     }
 
-    .resume-btn:hover {
-      background: transparent;
-      color: white;
-      border-color: white;
-      transform: translateY(-5px);
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+    .welcome-btn:hover {
+      background: #ffb820;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(240,165,0,0.3);
     }
 
-    nav {
-      background: white;
-      padding: 1.2rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    .welcome-skip {
+      font-size: 0.75rem;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s;
+    }
+
+    .welcome-skip:hover { color: var(--text); }
+
+    /* ── MAIN LAYOUT ── */
+    .hub {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 2rem 60px;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
       display: flex;
-      justify-content: center;
-      transition: var(--transition);
-    }
-
-    .nav-scrolled {
-      padding: 0.8rem 2rem;
-      backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    nav a {
-      margin: 0 1.5rem;
-      text-decoration: none;
-      color: var(--accent);
-      font-weight: 600;
-      position: relative;
-      font-size: 1.1rem;
-      transition: var(--transition);
-      padding: 0.5rem 0;
-    }
-
-    nav a::after {
-      content: "";
-      height: 3px;
-      width: 0;
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      background: var(--accent);
-      transition: 0.4s ease;
-      border-radius: 2px;
-    }
-
-    nav a:hover::after {
-      width: 100%;
-    }
-
-    section {
-      max-width: 1200px;
-      margin: 100px auto;
+      align-items: center;
+      justify-content: space-between;
       padding: 0 2rem;
-    }
-
-    section h2 {
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      background: var(--accent-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 2rem;
-      position: relative;
-      display: inline-block;
-    }
-
-    section h2::after {
-      content: "";
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      width: 70px;
-      height: 4px;
-      background: var(--accent);
-      border-radius: 2px;
-    }
-
-    .glass {
-      background: var(--glass-light);
+      height: 52px;
+      background: rgba(11,12,17,0.9);
       backdrop-filter: blur(12px);
-      padding: 2.5rem;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      transition: var(--transition);
+      border-bottom: 1px solid var(--border);
     }
 
-    .glass:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    .topbar-id {
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
-    .about p,
-    .contact p,
-    .contact a {
-      font-size: 1.15rem;
-      line-height: 1.8;
-      color: inherit;
-      margin-bottom: 1.2rem;
-    }
+    .topbar-id strong { color: var(--amber); }
 
-    .contact a {
-      display: inline-block;
-      transition: var(--transition);
+    .topbar-links { display: flex; gap: 1.5rem; }
+
+    .topbar-links a {
+      font-size: 0.78rem;
+      color: var(--muted);
       text-decoration: none;
-      position: relative;
+      transition: color 0.2s;
     }
 
-    .contact a::after {
-      content: "";
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: var(--accent);
-      transition: var(--transition);
+    .topbar-links a:hover { color: var(--amber); }
+
+    /* ── SECTION HEADERS ── */
+    .sec-head {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+      margin-top: 3.5rem;
     }
 
-    .contact a:hover::after {
-      width: 100%;
+    .sec-head:first-of-type { margin-top: 0; }
+
+    .sec-icon {
+      width: 32px; height: 32px;
+      border-radius: 6px;
+      background: rgba(240,165,0,0.1);
+      border: 1px solid rgba(240,165,0,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      color: var(--amber);
+      flex-shrink: 0;
     }
 
-    .projects ul {
-      list-style: none;
-      padding: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    .sec-title {
+      font-family: var(--display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .sec-count {
+      font-size: 0.7rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.15rem 0.55rem;
+    }
+
+    /* ── PROFILE CARD ── */
+    .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
       gap: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 3.5rem;
     }
 
-    .projects li {
-      transition: var(--transition);
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(240,165,0,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
     }
 
-    .projects a {
+    .profile-card:hover { border-color: rgba(240,165,0,0.4); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
+    .profile-card:hover::before { opacity: 1; }
+
+    .profile-avatar {
+      width: 60px; height: 60px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid rgba(240,165,0,0.3);
+      flex-shrink: 0;
+      background: var(--bg2);
+    }
+
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .profile-avatar-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--amber);
+    }
+
+    .profile-info { flex: 1; }
+
+    .profile-info-name {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .profile-info-role {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      color: var(--green);
+      background: rgba(0,212,170,0.08);
+      border: 1px solid rgba(0,212,170,0.2);
+      border-radius: 20px;
+      padding: 0.2rem 0.6rem;
+    }
+
+    .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.4)} }
+
+    .profile-arrow {
+      font-size: 1rem;
+      color: var(--amber);
+      flex-shrink: 0;
+    }
+
+    /* ── REPO GRID ── */
+    .repo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    .repo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .repo-card:hover { border-color: rgba(240,165,0,0.3); transform: translateY(-2px); background: #1a1d28; }
+
+    .repo-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .repo-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--blue);
+      transition: color 0.2s;
+    }
+
+    .repo-card:hover .repo-name { color: var(--amber); }
+
+    .repo-lang {
+      font-size: 0.65rem;
+      color: var(--muted);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.1rem 0.45rem;
+      flex-shrink: 0;
+    }
+
+    .repo-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .repo-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 0.3rem;
+    }
+
+    .repo-stat {
+      font-size: 0.68rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .repo-stat i { font-size: 0.6rem; }
+
+    /* ── PAGES GRID ── */
+    .pages-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .page-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      text-decoration: none;
+      color: inherit;
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      background: rgba(136, 211, 206, 0.15);
-      color: var(--accent);
-      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .page-row:hover { border-color: rgba(0,212,170,0.35); transform: translateX(4px); }
+
+    .page-icon {
+      width: 34px; height: 34px;
+      border-radius: 7px;
+      background: rgba(0,212,170,0.08);
+      border: 1px solid rgba(0,212,170,0.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .page-info { flex: 1; }
+
+    .page-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+    }
+
+    .page-url {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .page-url span { color: var(--green); }
+
+    .page-arrow {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    .hub-footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hub-footer p {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .hub-footer a { color: var(--amber); text-decoration: none; }
+
+    .hub-footer-links { display: flex; gap: 1rem; }
+
+    .hub-footer-links a {
+      font-size: 0.8rem;
+      color: var(--muted);
       text-decoration: none;
-      transition: var(--transition);
-      height: 100%;
-      border: 1px solid rgba(110, 69, 226, 0.1);
+      transition: color 0.2s;
     }
 
-    .projects a:hover {
-      background: var(--accent-gradient);
-      color: white;
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(110, 69, 226, 0.2);
-    }
+    .hub-footer-links a:hover { color: var(--amber); }
 
-    .projects a i {
-      font-size: 1.5rem;
-      transition: var(--transition);
-    }
-
-    .projects a:hover i {
-      transform: scale(1.2);
-    }
-
-    .skills {
-      margin-top: 100px;
-    }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 2rem;
-    }
-
-    .skill-card {
-      background: var(--glass-light);
-      backdrop-filter: blur(10px);
-      border-radius: var(--radius);
-      padding: 2.5rem 2rem;
-      text-align: center;
-      transition: var(--transition);
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .skill-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-      background: rgba(255, 255, 255, 0.85);
-    }
-
-    .skill-icon {
-      font-size: 3.5rem;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-      transition: var(--transition);
-    }
-
-    .skill-card:hover .skill-icon {
-      transform: scale(1.1);
-      color: var(--accent-light);
-    }
-
-    .skill-card h3 {
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
-      color: var(--accent);
-    }
-
-    .skill-card p {
-      font-size: 1rem;
-      color: var(--text-light);
-      opacity: 0.9;
-    }
-
-    footer {
-      text-align: center;
-      padding: 3rem 2rem;
-      background: linear-gradient(to right, #3e3e60, #445d5b);
-      color: rgba(255, 255, 255, 0.8);
-      margin-top: 100px;
-    }
-
-    .back-to-top {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      width: 50px;
-      height: 50px;
-      background: var(--accent);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: var(--transition);
-      z-index: 100;
-      box-shadow: var(--shadow);
-    }
-
-    .back-to-top.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .back-to-top:hover {
-      background: var(--accent-light);
-      transform: translateY(-5px);
-    }
-
-    /* Dark Theme */
-    body.dark {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
-
-    body.dark nav {
-      background: rgba(15, 17, 23, 0.9);
-    }
-
-    body.dark .nav-scrolled {
-      background: rgba(15, 17, 23, 0.85);
-    }
-
-    body.dark nav a {
-      color: var(--accent-light);
-    }
-
-    body.dark .glass {
-      background: var(--glass-dark);
-      box-shadow: var(--shadow-dark);
-    }
-
-    body.dark .glass:hover {
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    body.dark .projects a {
-      background: rgba(136, 211, 206, 0.1);
-      color: #88d3ce;
-      border: 1px solid rgba(136, 211, 206, 0.1);
-    }
-
-    body.dark .projects a:hover {
-      background: var(--accent-gradient);
-      color: #0a0a1a;
-    }
-
-    body.dark .resume-btn {
-      background: rgba(30, 30, 60, 0.6);
-      color: var(--accent-light);
-    }
-
-    body.dark .resume-btn:hover {
-      background: transparent;
-      color: white;
-      border-color: var(--accent-light);
-    }
-
-    body.dark header {
-      background: linear-gradient(135deg, #3e3e60, #445d5b);
-    }
-
-    body.dark .skill-card {
-      background: var(--glass-dark);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    body.dark .skill-card:hover {
-      background: rgba(30, 30, 60, 0.7);
-    }
-
-    body.dark .skill-card p {
-      color: var(--text-dark);
-    }
-
-    /* Responsive */
-    @media (max-width: 992px) {
-      .hero-content {
-        padding: 2rem;
-      }
-
-      .skills-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      }
-    }
-
-    @media (max-width: 768px) {
-      nav {
-        padding: 1rem;
-      }
-
-      nav a {
-        margin: 0 1rem;
-        font-size: 1rem;
-      }
-
-      .glass {
-        padding: 1.8rem;
-      }
-
-      .projects ul {
-        grid-template-columns: 1fr;
-      }
-
-      section {
-        margin: 80px auto;
-      }
-
-      .toggle-theme {
-        top: 1rem;
-        right: 1rem;
-        padding: 0.6rem;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .hero-content {
-        padding: 1.5rem;
-      }
-
-      nav {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-      }
-
-      nav a {
-        margin: 0 0.5rem;
-      }
-
-      .skill-card {
-        padding: 2rem 1.5rem;
-      }
-
-      .back-to-top {
-        bottom: 1rem;
-        right: 1rem;
-        width: 45px;
-        height: 45px;
-      }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .repo-grid { grid-template-columns: 1fr; }
+      .hub { padding: 70px 1.2rem 50px; }
+      .topbar { padding: 0 1.2rem; }
+      .topbar-links { gap: 1rem; }
     }
   </style>
 </head>
-
 <body>
-  <!-- Theme Toggle Button -->
-  <button class="toggle-theme" onclick="toggleTheme()" aria-label="Toggle Theme">
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
-      <title>Toggle theme</title>
-      <defs>
-        <clipPath id="half">
-          <rect x="0" y="0" width="50" height="100" />
-        </clipPath>
-      </defs>
-      <circle cx="50" cy="50" r="45" fill="white" />
-      <circle cx="50" cy="50" r="45" fill="black" clip-path="url(#half)" />
-      <circle cx="50" cy="50" r="45" stroke="black" stroke-width="4" fill="none" />
-    </svg>
-  </button>
 
-  <!-- Hero -->
-  <header>
-    <div class="hero-content">
-      <h1>Midway</h1>
-      <p>Frontend Developer | UI/UX Designer | Problem Solver</p>
-      <a href="Midway_Resume.pdf" download class="resume-btn" title="Download Resume PDF">
-        <i class="fas fa-download"></i> Download Resume
-      </a>
+<!-- ── WELCOME OVERLAY ── -->
+<div id="welcome">
+  <div class="welcome-tag">First time here? <span>▮</span></div>
+  <div class="welcome-name">middi<em>870</em></div>
+  <div class="welcome-role">Systems & Infrastructure Engineer · India</div>
+  <a href="https://middi870.github.io/Profile" class="welcome-btn">
+    <i class="fas fa-user"></i> View Full Profile
+  </a>
+  <div class="welcome-skip" id="skipBtn">Skip — just show me the hub</div>
+</div>
+
+<!-- ── TOP BAR ── -->
+<header class="topbar">
+  <div class="topbar-id"><strong>middi870</strong> / hub</div>
+  <div class="topbar-links">
+    <a href="https://github.com/middi870" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+    <a href="https://middi870.github.io/Profile">Profile</a>
+    <a href="mailto:midwayworld19@gmail.com"><i class="fas fa-envelope"></i></a>
+  </div>
+</header>
+
+<!-- ── HUB CONTENT ── -->
+<main class="hub">
+
+  <!-- Profile jump card -->
+  <a class="profile-card" href="https://middi870.github.io/Profile">
+    <div class="profile-avatar">
+      <img src="public/img/profile.png" alt="Aditya" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="profile-avatar-placeholder" style="display:none">A</div>
     </div>
-  </header>
-
-  <!-- Navigation -->
-  <nav id="navbar">
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </nav>
-
-  <!-- Sections -->
-  <section id="about" class="about glass">
-    <h2>About Me</h2>
-    <p>
-      Hey there! I'm Midway, a passionate web developer who loves clean UIs,
-      interactive apps, and solving real-world problems. I've worked on educational tools,
-      text editors, and creative web apps. I enjoy crafting fast, accessible, and intuitive interfaces.
-    </p>
-    <p>
-      With a focus on user experience and modern design principles, I create digital solutions that are both
-      beautiful and functional. My approach combines technical expertise with creative problem-solving to
-      deliver exceptional results.
-    </p>
-  </section>
-
-  <section id="skills" class="skills">
-    <h2>My Skills</h2>
-    <p class="subtitle">I specialize in these technologies and continuously expand my skill set</p>
-
-    <div class="skills-grid">
-      <div class="skill-card">
-        <div class="skill-icon">
-          <i class="fab fa-html5"></i>
-        </div>
-        <h3>HTML5 & CSS3</h3>
-        <p>Semantic markup, responsive design, CSS animations, Flexbox, Grid</p>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">
-          <i class="fab fa-js"></i>
-        </div>
-        <h3>JavaScript</h3>
-        <p>ES6+, DOM manipulation, AJAX, JSON, modern frameworks</p>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">
-          <i class="fab fa-react"></i>
-        </div>
-        <h3>React.js</h3>
-        <p>Component architecture, Hooks, Context API, Redux, React Router</p>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">
-          <i class="fab fa-node-js"></i>
-        </div>
-        <h3>Node.js</h3>
-        <p>Express.js, RESTful APIs, MongoDB, authentication, server-side logic</p>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">
-          <i class="fas fa-mobile-alt"></i>
-        </div>
-        <h3>Responsive Design</h3>
-        <p>Mobile-first approach, cross-browser compatibility, adaptive layouts</p>
-      </div>
-      <div class="skill-card">
-        <div class="skill-icon">
-          <i class="fas fa-tools"></i>
-        </div>
-        <h3>Dev Tools</h3>
-        <p>Git, Webpack, npm, VS Code, Chrome DevTools, testing frameworks</p>
-      </div>
+    <div class="profile-info">
+      <div class="profile-info-name">Aditya Ranjan Jha</div>
+      <div class="profile-info-role">Systems / Infrastructure Engineer · Python · Rust · Linux</div>
+      <div class="profile-badge"><div class="badge-dot"></div> Full portfolio — middi870.github.io/Profile</div>
     </div>
-  </section>
+    <div class="profile-arrow"><i class="fas fa-arrow-right"></i></div>
+  </a>
 
-  <section id="projects" class="projects glass">
-    <h2>Projects</h2>
-    <ul>
-      <li>
-        <a href="textEditor/textEditor.html">
-          <i class="fas fa-file-alt"></i>
-          <span>Text Editor</span>
-        </a>
-      </li>
-      <li>
-        <a href="textEditor/smartTextEditor.html">
-          <i class="fas fa-file-alt"></i>
-          <span>Smart Text Editor</span>
-        </a>
-      </li>
-      
-      <li>
-        <a href="web-ide/ide.html">
-          <i class="fas fa-file-alt"></i>
-          <span>Integrated Development Environment</span>
-        </a>
-      </li>
-      <li>
-        <a href="quiz/index.html">
-          <i class="fas fa-question-circle"></i>
-          <span>Quiz App</span>
-        </a>
-      </li>
-      <li>
-        <a href="project_quiz/index.html">
-          <i class="fas fa-lightbulb"></i>
-          <span>Quiz App2</span>
-        </a>
-      </li>
-      <li>
-        <a href="project_quiz2/index.html">
-          <i class="fas fa-question-circle"></i>
-          <span>Quiz App3</span>
-        </a>
-      </li>
-      <li>
-        <a href="textToPPT/texttoPPT.html">
-          <i class="fas fa-lightbulb"></i>
-          <span>Text to PPT Converter</span>
-        </a>
-      </li>
-      <li>
-        <a href="exp.html">
-          <i class="fas fa-file-alt"></i>
-          <span>Experimental Index</span>
-        </a>
-      </li>
-      <li>
-        <a href="old_index.html">
-          <i class="fas fa-file-alt"></i>
-          <span>Old-Index</span>
-        </a>
-      </li>
-    </ul>
-  </section>
+  <!-- Repos -->
+  <div class="sec-head">
+    <div class="sec-icon"><i class="fab fa-github"></i></div>
+    <div class="sec-title">Repositories</div>
+    <div class="sec-count">7 public</div>
+  </div>
 
-  <section id="contact" class="contact glass">
-    <h2>Contact</h2>
-    <p>Email: <a href="mailto:midwayworld19@gmail.com">midwayworld19@gmail.com</a></p>
-    <p>GitHub: <a href="https://github.com/middi870" target="_blank" rel="noopener noreferrer">github.com/middi870</a></p>
-    <!-- <p>LinkedIn: <a href="https://linkedin.com/in/midway" target="_blank"
-        rel="noopener noreferrer">linkedin.com/in/midway</a></p> -->
-  </section>
+  <div class="repo-grid">
 
-  <!-- Back to top button -->
-  <div class="back-to-top" id="backToTop">
-    <i class="fas fa-arrow-up"></i>
+    <a class="repo-card" href="https://github.com/middi870/wifi_rf" target="_blank" rel="noopener">
+      <div class="repo-card-top">
+        <span class="repo-name">wifi_rf</span>
+        <span class="repo-lang">Rust</span>
+      </div>
+      <div class="repo-desc">RF sensing system — human presence detection via WiFi signal fluctuations.</div>
+      <div class="repo-footer"><span class="repo-stat"><i class="fas fa-star"></i> 1</span></div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/middi870/web_piper_tts" target="_blank" rel="noopener">
+      <div class="repo-card-top">
+        <span class="repo-name">web_piper_tts</span>
+        <span class="repo-lang">HTML</span>
+      </div>
+      <div class="repo-desc">Browser-based TTS using Piper — text to natural audio, no backend needed.</div>
+      <div class="repo-footer"><span class="repo-stat"><i class="fas fa-star"></i> 1</span></div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/middi870/learnjs" target="_blank" rel="noopener">
+      <div class="repo-card-top">
+        <span class="repo-name">learnjs</span>
+        <span class="repo-lang">JavaScript</span>
+      </div>
+      <div class="repo-desc">Hands-on JS learning repo — experiments and notes mastering the language.</div>
+      <div class="repo-footer"><span class="repo-stat"><i class="fas fa-star"></i> 1</span></div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/middi870/doc" target="_blank" rel="noopener">
+      <div class="repo-card-top">
+        <span class="repo-name">doc</span>
+        <span class="repo-lang">Markdown</span>
+      </div>
+      <div class="repo-desc">Personal docs — notes and references on systems topics and engineering concepts.</div>
+      <div class="repo-footer"></div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/middi870/testrepo" target="_blank" rel="noopener">
+      <div class="repo-card-top">
+        <span class="repo-name">testrepo</span>
+        <span class="repo-lang">Python</span>
+      </div>
+      <div class="repo-desc">Test repository — scratch space for experiments and quick prototypes.</div>
+      <div class="repo-footer"></div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/middi870/middi870.github.io" target="_blank" rel="noopener">
+      <div class="repo-card-top">
+        <span class="repo-name">middi870.github.io</span>
+        <span class="repo-lang">HTML</span>
+      </div>
+      <div class="repo-desc">This site — the root GitHub Pages hub you're looking at right now.</div>
+      <div class="repo-footer"></div>
+    </a>
+
+    <a class="repo-card" href="https://github.com/middi870/middi870" target="_blank" rel="noopener">
+      <div class="repo-card-top">
+        <span class="repo-name">middi870</span>
+        <span class="repo-lang">Markdown</span>
+      </div>
+      <div class="repo-desc">GitHub profile config — the README that shows on my GitHub profile page.</div>
+      <div class="repo-footer"></div>
+    </a>
+
+  </div>
+
+  <!-- GitHub Pages -->
+  <div class="sec-head">
+    <div class="sec-icon"><i class="fas fa-globe"></i></div>
+    <div class="sec-title">Live Pages</div>
+    <div class="sec-count">GitHub Pages</div>
+  </div>
+
+  <div class="pages-grid">
+
+    <a class="page-row" href="https://middi870.github.io/Profile">
+      <div class="page-icon"><i class="fas fa-user"></i></div>
+      <div class="page-info">
+        <div class="page-name">Profile / Portfolio</div>
+        <div class="page-url">middi870.github.io<span>/Profile</span></div>
+      </div>
+      <div class="page-arrow"><i class="fas fa-arrow-up-right-from-square"></i></div>
+    </a>
+
+    <a class="page-row" href="https://middi870.github.io">
+      <div class="page-icon"><i class="fas fa-house"></i></div>
+      <div class="page-info">
+        <div class="page-name">Hub (this page)</div>
+        <div class="page-url">middi870.github.io<span>/</span></div>
+      </div>
+      <div class="page-arrow"><i class="fas fa-arrow-up-right-from-square"></i></div>
+    </a>
+
+    <a class="page-row" href="https://middi870.github.io/web_piper_tts">
+      <div class="page-icon"><i class="fas fa-volume-high"></i></div>
+      <div class="page-info">
+        <div class="page-name">web_piper_tts</div>
+        <div class="page-url">middi870.github.io<span>/web_piper_tts</span></div>
+      </div>
+      <div class="page-arrow"><i class="fas fa-arrow-up-right-from-square"></i></div>
+    </a>
+
   </div>
 
   <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Midway. All rights reserved.</p>
-    <p>Designed with ❤️ and modern CSS</p>
-  </footer>
+  <div class="hub-footer">
+    <p>&copy; 2026 <a href="https://github.com/middi870">middi870</a> · Aditya Ranjan Jha</p>
+    <div class="hub-footer-links">
+      <a href="https://github.com/middi870" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a href="https://linkedin.com/in/aditya-ranjan-jha" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+      <a href="mailto:midwayworld19@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+    </div>
+  </div>
 
-  <!-- Theme Script -->
-  <script>
-    // Theme toggle
-    function toggleTheme() {
-      const isDark = document.body.classList.toggle("dark");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    }
+</main>
 
-    // Set initial theme
-    window.addEventListener("DOMContentLoaded", () => {
-      if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-      }
-      
-      // Nav scroll effect
-      const nav = document.getElementById('navbar');
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-          nav.classList.add('nav-scrolled');
-        } else {
-          nav.classList.remove('nav-scrolled');
-        }
-      });
-      
-      // Back to top button
-      const backToTopBtn = document.getElementById('backToTop');
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) {
-          backToTopBtn.classList.add('visible');
-        } else {
-          backToTopBtn.classList.remove('visible');
-        }
-      });
-      
-      backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      });
-      
-      // Smooth scroll for navigation links
-      document.querySelectorAll('nav a').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          e.preventDefault();
-          const targetId = this.getAttribute('href');
-          const targetElement = document.querySelector(targetId);
-          
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: 'smooth'
-          });
-        });
-      });
-    });
-  </script>
+<script>
+  const SEEN_KEY = 'middi870_seen';
+
+  // If already visited, skip welcome screen
+  if (localStorage.getItem(SEEN_KEY)) {
+    document.getElementById('welcome').classList.add('hidden');
+  }
+
+  // Skip button dismisses overlay and marks as seen
+  document.getElementById('skipBtn').addEventListener('click', () => {
+    localStorage.setItem(SEEN_KEY, '1');
+    document.getElementById('welcome').classList.add('hidden');
+  });
+
+  // Clicking "View Full Profile" also marks as seen (for back navigation)
+  document.querySelector('.welcome-btn').addEventListener('click', () => {
+    localStorage.setItem(SEEN_KEY, '1');
+  });
+</script>
 </body>
-
 </html>
